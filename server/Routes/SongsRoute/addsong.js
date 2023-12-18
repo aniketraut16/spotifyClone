@@ -1,5 +1,5 @@
 const express = require("express");
-const SongModel = require("../database");
+const SongModel = require("../../database");
 const router = express.Router();
 
 router.post("/addsong", async (req, res) => {
@@ -7,11 +7,12 @@ router.post("/addsong", async (req, res) => {
     const { title, singer, album, duration } = req.body;
     const songDetails = await SongModel.findOne({ title });
 
-    if (!songDetails) {
+    if (songDetails) {
       return res.status(400).json({
-        message: "Song ALready exist",
+        message: "Song Already exists",
       });
     }
+
     const newSong = new SongModel({
       title,
       singer,
@@ -22,7 +23,7 @@ router.post("/addsong", async (req, res) => {
     await newSong.save();
 
     res.status(200).json({
-      message: "Song Succesfully Added",
+      message: "Song Successfully Added",
     });
   } catch (error) {
     console.log(error);
