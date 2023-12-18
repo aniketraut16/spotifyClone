@@ -1,12 +1,5 @@
 const mongoose = require("mongoose");
 
-const songSchema = new mongoose.Schema({
-  title: String,
-  singer: String,
-  album: String,
-  duration: Number,
-});
-
 async function connectToDatabase() {
   try {
     await mongoose.connect("mongodb://127.0.0.1:27017/songs", {
@@ -20,7 +13,3 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
-
-const SongModel = new mongoose.model("songinfo", songSchema);
-
-module.exports = SongModel;

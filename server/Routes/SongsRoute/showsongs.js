@@ -1,5 +1,6 @@
 const express = require("express");
-const SongModel = require("../../database");
+const SongModel = require("../../Models/SongModel");
+require("../../database");
 const router = express.Router();
 
 router.get("/showsongs", async (req, res) => {
