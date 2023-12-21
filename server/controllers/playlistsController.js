@@ -4,8 +4,11 @@ require("../database");
 
 const createPlaylist = async (req, res) => {
   try {
-    const { title } = req.body;
-    const playlistdetails = await PlaylistModel.findOne({ title: title });
+    const { title, description, createdBy } = req.body;
+    const playlistdetails = await PlaylistModel.findOne({
+      title: title,
+      createdBy: createdBy,
+    });
     if (playlistdetails) {
       return res.status(400).json({
         message: "Playlist Already Exists",
@@ -14,6 +17,8 @@ const createPlaylist = async (req, res) => {
     const songs = [];
     const newPlaylist = new PlaylistModel({
       title,
+      description,
+      createdBy,
       songs,
     });
 
@@ -21,6 +26,7 @@ const createPlaylist = async (req, res) => {
 
     res.status(200).json({
       message: "Playlist Successfully Created",
+      id: newPlaylist._id,
     });
   } catch (error) {
     console.log(error);

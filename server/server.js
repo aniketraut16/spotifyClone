@@ -5,6 +5,7 @@ const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+require("dotenv").config();
 
 // SongsRouts
 const songRoutes = require("./routes/songRoutes");

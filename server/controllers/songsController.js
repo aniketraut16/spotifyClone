@@ -1,16 +1,24 @@
 const SongModel = require("../models/SongModel");
 require("../database");
 
-//Function to Add Song in DataBase
-
+// Function to Add Song in DataBase
 const addSong = async (req, res) => {
   try {
-    const { title, singer, album, duration } = req.body;
+    const {
+      title,
+      singer,
+      album,
+      duration,
+      genre,
+      releaseDate,
+      lyrics,
+      isExplicit,
+    } = req.body;
     const songDetails = await SongModel.findOne({ title });
 
     if (songDetails) {
-      return res.status(400).json({
-        message: "Song Already exists",
+      return res.status(409).json({
+        message: "Song already exists",
       });
     }
 
@@ -19,12 +27,16 @@ const addSong = async (req, res) => {
       singer,
       album,
       duration,
+      genre,
+      releaseDate,
+      lyrics,
+      isExplicit,
     });
 
     await newSong.save();
 
-    res.status(200).json({
-      message: "Song Successfully Added",
+    res.status(201).json({
+      message: "Song successfully added",
     });
   } catch (error) {
     console.log(error);
@@ -33,21 +45,21 @@ const addSong = async (req, res) => {
 };
 
 // Function to Delete Song from DataBase
-
 const deleteSong = async (req, res) => {
   try {
     const { title } = req.body;
     const songDetails = await SongModel.findOne({ title });
 
     if (!songDetails) {
-      return res.status(400).json({
-        message: "Song doesn't exists",
+      return res.status(404).json({
+        message: "Song doesn't exist",
       });
     }
-    await SongModel.deleteOne({ title: title });
+
+    await SongModel.deleteOne({ title });
 
     res.status(200).json({
-      message: "Song Deleted Succcesfully",
+      message: "Song deleted successfully",
     });
   } catch (error) {
     console.log(error);
@@ -56,31 +68,43 @@ const deleteSong = async (req, res) => {
 };
 
 // Function to Update Song from DataBase
-
 const updateSong = async (req, res) => {
   try {
-    const { title, singer, album, duration } = req.body;
+    const {
+      title,
+      singer,
+      album,
+      duration,
+      genre,
+      releaseDate,
+      lyrics,
+      isExplicit,
+    } = req.body;
     const songDetails = await SongModel.findOne({ title });
 
     if (!songDetails) {
-      return res.status(400).json({
-        message: "Song doesn't exists",
+      return res.status(404).json({
+        message: "Song doesn't exist",
       });
     }
+
     await SongModel.updateOne(
-      { title: title },
+      { title },
       {
         $set: {
-          title: title,
-          singer: singer,
-          album: album,
-          duration: duration,
+          singer,
+          album,
+          duration,
+          genre,
+          releaseDate,
+          lyrics,
+          isExplicit,
         },
       }
     );
 
     res.status(200).json({
-      message: "Song Updated Succcesfully",
+      message: "Song updated successfully",
     });
   } catch (error) {
     console.log(error);
@@ -94,8 +118,9 @@ const songDetails = async (req, res) => {
     const searchPart = req.params.part;
 
     if (!searchPart) {
-      return res.status(400).json({ error: "Search part is required." });
+      return res.status(200).json({});
     }
+
     const regex = new RegExp(searchPart, "i");
     const matchingSongs = await SongModel.find({ title: regex });
 
