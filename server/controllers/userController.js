@@ -23,18 +23,23 @@ const createUser = async (req, res) => {
     await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, SECRET_KEY);
+    console.log(token);
     const likedSongs = {
       title: `${name}'s Liked Songs`,
       songs: [],
       public: false,
-      createdBy: newUser._id,
     };
 
     try {
       // Error handling for playlist creation
       const playlistId = await axios.post(
         `${process.env.BASEURL}/backend/playlists/createplaylist`,
-        likedSongs
+        likedSongs,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(playlistId);
       newUser.playlists.push(playlistId.data.id);

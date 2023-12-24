@@ -4,7 +4,8 @@ require("../database");
 
 const createPlaylist = async (req, res) => {
   try {
-    const { title, description, createdBy } = req.body;
+    const { title, description } = req.body;
+    const createdBy = req.createdBy;
     const playlistdetails = await PlaylistModel.findOne({
       title: title,
       createdBy: createdBy,
@@ -30,13 +31,18 @@ const createPlaylist = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 const addsong = async (req, res) => {
   try {
     const { title, songid } = req.body;
-    const playlistdetails = await PlaylistModel.findOne({ title: title });
+    const playlistdetails = await PlaylistModel.findOne({
+      title: title,
+      createdBy: req.createdBy,
+    });
 
     if (!playlistdetails) {
       return res.status(400).json({
@@ -51,7 +57,7 @@ const addsong = async (req, res) => {
     }
 
     await PlaylistModel.updateOne(
-      { title: title },
+      { _id: playlistid },
       { $push: { songs: songid } }
     );
 
@@ -63,11 +69,14 @@ const addsong = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 const deletesong = async (req, res) => {
   try {
     const { title, songid } = req.body;
-    const playlist = await PlaylistModel.findOne({ title: title });
-
+    const playlist = await PlaylistModel.findOne({
+      title: title,
+      createdBy: req.createdBy,
+    });
     if (!playlist) {
       return res.status(400).json({
         message: "Playlist Doesn't Exist",
@@ -96,7 +105,10 @@ const playlistDetails = async (req, res) => {
   try {
     const title = req.params.title;
 
-    const playlistdetails = await PlaylistModel.findOne({ title: title });
+    const playlistdetails = await PlaylistModel.findOne({
+      title: title,
+      createdBy: req.createdBy,
+    });
 
     if (!playlistdetails) {
       return res.status(400).json({
@@ -112,7 +124,7 @@ const playlistDetails = async (req, res) => {
     }
 
     const dataobj = {
-      title: title,
+      title: playlistdetails.title,
       songs: songlist,
     };
     res.status(200).json(dataobj);
@@ -126,7 +138,10 @@ const changeTitle = async (req, res) => {
     const { currentTitle, newTitle } = req.body;
 
     // Find the playlist with the current title
-    const playlist = await PlaylistModel.findOne({ title: currentTitle });
+    const playlist = await PlaylistModel.findOne({
+      title: currentTitle,
+      createdBy: req.createdBy,
+    });
 
     if (!playlist) {
       return res.status(400).json({
