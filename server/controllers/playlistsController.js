@@ -57,7 +57,7 @@ const addsong = async (req, res) => {
     }
 
     await PlaylistModel.updateOne(
-      { _id: playlistid },
+      { title: title, createdBy: req.createdBy },
       { $push: { songs: songid } }
     );
 

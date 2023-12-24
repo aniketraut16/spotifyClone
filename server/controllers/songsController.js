@@ -47,8 +47,8 @@ const addSong = async (req, res) => {
 // Function to Delete Song from DataBase
 const deleteSong = async (req, res) => {
   try {
-    const { title } = req.body;
-    const songDetails = await SongModel.findOne({ title });
+    const id = req.params.id;
+    const songDetails = await SongModel.findOne({ _id: id });
 
     if (!songDetails) {
       return res.status(404).json({

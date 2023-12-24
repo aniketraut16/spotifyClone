@@ -4,35 +4,7 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 
 ## User Routes
 
-### 1. User Login
-
-#### Route
-
-`POST /backend/user/login`
-
-#### Request
-
-```json
-{
-  "name": "user_name",
-  "email": "user_email@example.com",
-  "password": "user_password"
-}
-```
-
-#### Response
-
-```json
-{
-  "user": {
-    "name": "user_name",
-    "email": "user_email@example.com"
-  },
-  "token": "generated_token"
-}
-```
-
-### 2. Create User
+### 1. User Creating
 
 #### Route
 
@@ -42,8 +14,9 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 
 ```json
 {
+  "name": "Test User",
   "email": "user_email@example.com",
-  "password": "user_password"
+  "password": "abc123"
 }
 ```
 
@@ -52,9 +25,51 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 ```json
 {
   "user": {
-    "email": "user_email@example.com"
+    "name": "Test User",
+    "email": "user_email@example.com",
+    "hashedPassword": "$2a$10$m4ztsrXcOaAsX.E57zHvy.CPtU6m5AaerkfsgCSa0lx.0/F1Uhz92",
+    "isPremium": false,
+    "isCreater": false,
+    "favoriteGenres": [],
+    "playlists": ["65885cc549ead0aced78ed39"],
+    "_id": "65885cc549ead0aced78ed36",
+    "__v": 1
   },
-  "token": "generated_token"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTQ2MX0.BlrrbrlZFldICHGvAtY1FCZQ8yuqr3O44THwUDBkQKg"
+}
+```
+
+### 2. User Login
+
+#### Route
+
+`POST /backend/user/login`
+
+#### Request
+
+```json
+{
+  "email": "user_email@example.com",
+  "password": "abc123"
+}
+```
+
+#### Response
+
+```json
+{
+  "user": {
+    "_id": "65885cc549ead0aced78ed36",
+    "name": "Test User",
+    "email": "user_email@example.com",
+    "hashedPassword": "$2a$10$m4ztsrXcOaAsX.E57zHvy.CPtU6m5AaerkfsgCSa0lx.0/F1Uhz92",
+    "isPremium": false,
+    "isCreater": false,
+    "favoriteGenres": [],
+    "playlists": ["65885cc549ead0aced78ed39"],
+    "__v": 1
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
 }
 ```
 
@@ -75,12 +90,20 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 }
 ```
 
+#### Headers
+
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
+}
+```
+
 #### Response
 
 ```json
 {
   "message": "Playlist Successfully Created",
-  "id": "new_playlist_id"
+  "id": "65885eaf49ead0aced78ed3e"
 }
 ```
 
@@ -95,7 +118,15 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 ```json
 {
   "title": "My Playlist",
-  "songid": "song_id"
+  "songid": "657f8c07d77be724f4c4901b"
+}
+```
+
+#### Headers
+
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
 }
 ```
 
@@ -118,7 +149,15 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 ```json
 {
   "title": "My Playlist",
-  "songid": "song_id"
+  "songid": "657f8c07d77be724f4c4901b"
+}
+```
+
+#### Headers
+
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
 }
 ```
 
@@ -141,7 +180,15 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 ```json
 {
   "currentTitle": "My Playlist",
-  "newTitle": "New Playlist Title"
+  "newTitle": "My New Playlist "
+}
+```
+
+#### Headers
+
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
 }
 ```
 
@@ -158,6 +205,7 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 #### Route
 
 `GET /backend/playlists/playlistdetails/:title`
+For Eg. `/backend/playlists/playlistdetails/My New Playlist `
 
 #### Request
 
@@ -165,13 +213,48 @@ Welcome to the documentation for the Music Player App Backend API. This API serv
 {}
 ```
 
+#### Headers
+
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODg1Y2M1NDllYWQwYWNlZDc4ZWQzNiIsImlhdCI6MTcwMzQzNTU3MX0.0mrIcSDW_ikf81FnK999sCasD5DMuLsu5ywa4fFvbxw"
+}
+```
+
 #### Response
 
 ```json
 {
-  "dataobj": {
-    // ... playlist details
-  }
+  "title": "My New Playlist ",
+  "songs": [
+    {
+      "isExplicit": false,
+      "_id": "657f8c07d77be724f4c4901b",
+      "title": "Blinding Lights",
+      "singer": "The Weeknd",
+      "album": "After Hours",
+      "duration": 207,
+      "__v": 0
+    },
+    {
+      "isExplicit": false,
+      "_id": "657f8c15d77be724f4c4901e",
+      "title": "Levitating",
+      "singer": "Dua Lipa",
+      "album": "Future Nostalgia",
+      "duration": 203,
+      "__v": 0
+    },
+    {
+      "isExplicit": false,
+      "_id": "657f8c6ad77be724f4c49028",
+      "title": "Montero (Call Me By Your Name)",
+      "singer": "Lil Nas X",
+      "album": "Montero",
+      "duration": 181,
+      "__v": 0
+    }
+  ]
 }
 ```
 
