@@ -56,7 +56,7 @@ const deleteSong = async (req, res) => {
       });
     }
 
-    await SongModel.deleteOne({ title });
+    await SongModel.deleteOne({ _id: id });
 
     res.status(200).json({
       message: "Song deleted successfully",

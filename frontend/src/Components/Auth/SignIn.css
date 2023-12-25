@@ -1,0 +1,254 @@
+#signin {
+    height: 100vh;
+    width: 100%;
+    background-color: #121212;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+#signin form {
+    width: 25em;
+    display: flex;
+    overflow: hidden;
+}
+
+/* ========= Login Steps Global Styling ========= */
+
+#signin form section {
+    min-width: calc(100% - 5em);
+    padding: 0px 2.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+}
+
+.sign-up-next-btn {
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 0px;
+    color: black;
+    font-weight: bold;
+    background-color: #1ed760;
+    border-radius: 25px;
+    margin: 1.5em 0px;
+}
+
+.sign-in-step-count {
+    color: #a7a7a9;
+    margin: 18px 0px 5px 0px;
+}
+
+.step-description {
+    margin: 0px 0px 25px 0px;
+}
+
+.steps-field-description {
+    color: #a7a7a9;
+    font-size: 0.9em;
+    margin: 2px 0px;
+    font-weight: 600;
+}
+
+.sign-up-prev-btn {
+    position: absolute;
+    top: 28px;
+    left: 0px;
+    color: white;
+    text-decoration: none;
+}
+
+#step1loadingbar {
+    position: absolute;
+    left: 0px;
+    height: 2px;
+    width: 33%;
+    background-color: #1dd661;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+#step2loadingbar {
+    position: absolute;
+    left: 0px;
+    height: 2px;
+    width: 67%;
+    background-color: #1dd661;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+#step3loadingbar {
+    position: absolute;
+    left: 0px;
+    height: 2px;
+    width: 100%;
+    background-color: #1dd661;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.totalloadingbar {
+    position: absolute;
+    left: 0px;
+    height: 2px;
+    width: 100%;
+    background-color: #767676;
+    border-radius: 5px;
+}
+
+/* =========== Step 0 Styling =========== */
+
+
+#step0 h1 {
+    font-size: 2.5em;
+}
+
+#use-phone-instead {
+    color: #1dd661;
+}
+
+#step0 label {
+    font-weight: bold;
+}
+
+#step0 input[type=email] {
+    width: calc(100% - 24px);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 7px 0px;
+    color: white;
+    outline: none;
+    height: 2.5em;
+    background-color: transparent;
+    border: 2px solid #767676;
+}
+
+/* =========== Step 1 Styling =========== */
+
+#step1 #password-input-container {
+    width: 100%
+}
+
+#step1 label {
+    font-weight: bold;
+}
+
+#step1 #password-input-container input[type=password] {
+    width: calc(100% - 24px);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 7px 0px;
+    color: white;
+    outline: none;
+    height: 2.5em;
+    background-color: transparent;
+    border: 2px solid #767676;
+}
+
+/* =========== Step 2 Styling =========== */
+
+#step2 label {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.steps-field-description a {
+    color: #a7a7a9;
+    margin-left: 2px;
+}
+
+#step2 input[type=text] {
+    width: calc(100% - 24px);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 7px 0px;
+    color: white;
+    outline: none;
+    height: 2.5em;
+    background-color: transparent;
+    border: 2px solid #767676;
+}
+
+#dateOfBirth-input-container {
+    width: 100%;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+#step2 #dateOfBirth-input-container input[type=number] {
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 7px 0px;
+    color: white;
+    outline: none;
+    height: 2.5em;
+    background-color: transparent;
+    border: 2px solid #767676;
+    width: 15%;
+}
+
+
+#step2 #dateOfBirth-input-container select {
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 7px 0px;
+    color: white;
+    outline: none;
+    height: 3em;
+    background-color: transparent;
+    border: 2px solid #767676;
+    width: 50%;
+}
+
+#step2 #dateOfBirth-input-container select option {
+    background-color: #121212;
+}
+
+#step2 #dateOfBirth-input-container input[type="number"]::-webkit-inner-spin-button,
+#step2 #dateOfBirth-input-container input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#step2 #gender-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0px;
+}
+
+#step2 #gender-input-container input {
+    display: none;
+}
+
+#step2 #gender-input-container label {
+    margin: 8px 0px;
+    font-weight: 600;
+}
+
+#step2 #gender-input-container label::before {
+    content: '';
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin: 0px 10px;
+    border: 2px solid #767676;
+    border-radius: 25px;
+    vertical-align: middle;
+}
+
+#step2 #gender-input-container input:checked+label::before {
+    background-color: #1dd661;
+    border: 2px solid #1dd661;
+}

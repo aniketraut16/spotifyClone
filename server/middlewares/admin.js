@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
+const UserModel = require("../models/UserModel");
 
-const auth = (req, res, next) => {
+const admin = async (req, res, next) => {
   try {
     let token = req.headers.authorization;
     if (token) {
@@ -9,6 +10,12 @@ const auth = (req, res, next) => {
       let user = jwt.verify(token, SECRET_KEY);
       console.log(user);
       req.createdBy = user.id;
+      const userdetails = await UserModel.findOne({ _id: user.id });
+      console.log(userdetails.isCreater);
+
+      if (!userdetails.isCreater) {
+        return res.status(401).json({ message: "Permission Denied" });
+      }
     } else {
       return res.status(401).json({ message: "Unauthorized User" });
     }
@@ -20,4 +27,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+module.exports = admin;
