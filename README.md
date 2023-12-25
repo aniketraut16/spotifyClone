@@ -1,6 +1,6 @@
-# Music Player App Backend API Documentation
+# Spotify Clone Backend API Documentation
 
-Welcome to the documentation for the Music Player App Backend API. This API serves as the backend for our music player application, providing various endpoints to manage users, playlists, and songs.
+Welcome to the documentation for the  Spotify Clone Backend API. This API serves as the backend for our Spotify Clone, providing various endpoints to manage users, playlists, and songs.
 
 ## User Routes
 
@@ -368,4 +368,4 @@ For Eg. `/backend/playlists/playlistdetails/My New Playlist `
 - **Validation:** Validate incoming requests to ensure data integrity.
 - **Documentation:** For more details, refer to the API documentation.
 
-Feel free to explore and use the provided routes to build a feature-rich music player application!
+Feel free to explore and use the provided routes to build a feature-rich app!
