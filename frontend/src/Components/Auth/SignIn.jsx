@@ -1,27 +1,137 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./SignIn.css";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, AlertCircle } from "lucide-react";
+import Logo from "../Images/Spotify_Logo_CMYK_White.png";
+
 function Sign() {
+  const [userEmail, setuserEmail] = useState("");
+  const [isValidEmail, setisValidEmail] = useState(true);
+  const [isNewUser, setisNewUser] = useState(true);
+  const [userPassword, setuserPassword] = useState("");
+  const [username, setusername] = useState("");
+  const [userBirthYear, setuserBirthYear] = useState(null);
+  const [userBirthMonth, setuserBirthMonth] = useState("");
+  const [userBirthDay, setuserBirthDay] = useState(null);
+  const [userGender, setuserGender] = useState("");
+  const [touchedInputs, setTouchedInputs] = useState({
+    email: false,
+    password: false,
+    name: false,
+    birthDay: false,
+    birthMonth: false,
+    birthYear: false,
+    gender: false,
+  });
+
+  useEffect(() => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (touchedInputs.email) {
+      if (emailRegex.test(userEmail)) {
+        setisValidEmail(true);
+        // Axios Request for availability of email
+        const sampleresult = userEmail === "example@email.com" ? false : true;
+        if (sampleresult) {
+          setisNewUser(true);
+        } else {
+          setisNewUser(false);
+        }
+      } else {
+        setisValidEmail(false);
+        setisNewUser(true);
+      }
+    }
+  }, [userEmail, touchedInputs.email]);
+
+  const validatePassword = () => {
+    return userPassword.length >= 8 && userPassword.trim() != "";
+  };
+
+  const validateBirthDay = () => {
+    return userBirthDay >= 1 && userBirthDay <= 31;
+  };
+
+  const validateBirthMonth = () => {
+    return userBirthMonth !== "";
+  };
+
+  const validateBirthYear = () => {
+    return userBirthYear >= 1990;
+  };
+
+  const allOk = () => {
+    return (
+      username.trim() !== "" &&
+      validateBirthYear &&
+      validateBirthMonth &&
+      validateBirthDay &&
+      userGender !== ""
+    );
+  };
+
   return (
     <div id="signin">
+      <div id="sign-in-spotify-logo">
+        <img src={Logo} alt="" srcset="" />
+      </div>
       <form>
+        {/* Step 0 - Email */}
         <section id="step0">
           <h1>Sign up to Start listening </h1>
           <label htmlFor="user-email-id">Email address</label>
-          <input type="email" name="user-email-id" id="user-email-id" />
-          <a href="#" id="use-phone-instead">
-            Use phone number instead
-          </a>
-          <a href="#step1" className="sign-up-next-btn">
+          <input
+            type="email"
+            name="user-email-id"
+            id="user-email-id"
+            value={userEmail}
+            onChange={(e) => {
+              setuserEmail(e.target.value);
+              setTouchedInputs({ ...touchedInputs, email: true });
+            }}
+            style={
+              touchedInputs.email && !isValidEmail
+                ? { border: "2px solid #f15e6c" }
+                : {}
+            }
+          />
+          {touchedInputs.email && !isValidEmail ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>
+                This email is invalid. Make sure it's written like
+                example@email.com
+              </p>
+            </div>
+          ) : (
+            <></>
+          )}
+          {touchedInputs.email && !isNewUser ? (
+            <div id="user-new-email-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>
+                This address is already linked to an existing account. To
+                continue, <a href="#">log in</a>.
+              </p>
+            </div>
+          ) : (
+            <></>
+          )}
+          <a
+            href={
+              touchedInputs.email && isNewUser && isValidEmail ? "#step1" : "#"
+            }
+            className="sign-up-next-btn"
+          >
             Next
           </a>
         </section>
+
+        {/* Step 1 - Password */}
         <section id="step1">
           <div id="step1loadingbar"></div>
-          <div className="totalloadingbar"></div>
           <a href="#step0" className="sign-up-prev-btn">
             <ChevronLeft size={32} />
           </a>
+          <div className="totalloadingbar"></div>
           <h3 className="sign-in-step-count">Step 1 of 3</h3>
           <h3 className="step-description">Create a password</h3>
           <label htmlFor="sign-in-password">Password</label>
@@ -30,17 +140,39 @@ function Sign() {
               type="password"
               name="sign-in-password"
               id="sign-in-password"
+              value={userPassword}
+              onChange={(e) => {
+                setuserPassword(e.target.value);
+                setTouchedInputs({ ...touchedInputs, password: true });
+              }}
+              style={
+                touchedInputs.password && !validatePassword()
+                  ? { border: "2px solid #f15e6c" }
+                  : {}
+              }
             />
+            {touchedInputs.password && !validatePassword() ? (
+              <div className="user-warning">
+                <AlertCircle size={24} strokeWidth={2.25} />
+                <p>Password should contain at least 8 characters.</p>
+              </div>
+            ) : (
+              <></>
+            )}
             <p className="steps-field-description">
-              The password must contain atleast 8 character. We recommend
-              including at least 1 number and 1 special character.{" "}
+              The password must contain at least 8 characters. We recommend
+              including at least 1 number and 1 special character.
             </p>
           </div>
-
-          <a href="#step2" className="sign-up-next-btn">
+          <a
+            href={validatePassword() ? "#step2" : "#"}
+            className="sign-up-next-btn"
+          >
             Next
           </a>
         </section>
+
+        {/* Step 2 - Name and Date of Birth */}
         <section id="step2">
           <div id="step2loadingbar"></div>
           <div className="totalloadingbar"></div>
@@ -53,7 +185,29 @@ function Sign() {
           <p className="steps-field-description">
             This name will appear on your profile
           </p>
-          <input type="text" name="sign-in-name" id="sign-in-name" />
+          <input
+            type="text"
+            name="sign-in-name"
+            id="sign-in-name"
+            value={username}
+            onChange={(e) => {
+              setusername(e.target.value);
+              setTouchedInputs({ ...touchedInputs, email: true });
+            }}
+            style={
+              touchedInputs.name && username.trim() === ""
+                ? { border: "2px solid #f15e6c" }
+                : {}
+            }
+          />
+          {touchedInputs.name && username.trim() === "" ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>Enter a name for your profile</p>
+            </div>
+          ) : (
+            <></>
+          )}
           <label htmlFor="sign-in-year">Date of birth</label>
           <p className="steps-field-description">
             Why do we need your date of birth?<a href="#">Learn more</a>
@@ -64,9 +218,32 @@ function Sign() {
               name="sign-in-year"
               id="sign-in-year"
               placeholder="yyyy"
+              value={userBirthYear}
+              onChange={(e) => {
+                setuserBirthYear(e.target.value);
+                setTouchedInputs({ ...touchedInputs, birthYear: true });
+              }}
+              style={
+                touchedInputs.birthYear && !validateBirthYear()
+                  ? { border: "2px solid #f15e6c" }
+                  : {}
+              }
             />
-            <select name="sign-in-month" id="sign-in-month">
-              <option value="month" selected>
+            <select
+              name="sign-in-month"
+              id="sign-in-month"
+              value={userBirthMonth}
+              onChange={(e) => {
+                setuserBirthMonth(e.target.value);
+                setTouchedInputs({ ...touchedInputs, birthMonth: true });
+              }}
+              style={
+                touchedInputs.birthMonth && !validateBirthMonth()
+                  ? { border: "2px solid #f15e6c" }
+                  : {}
+              }
+            >
+              <option value="" disabled selected>
                 Month
               </option>
               <option value="01">January</option>
@@ -87,32 +264,85 @@ function Sign() {
               name="sign-in-day"
               id="sign-in-day"
               placeholder="dd"
+              value={userBirthDay}
+              onChange={(e) => {
+                setuserBirthDay(e.target.value);
+                setTouchedInputs({ ...touchedInputs, birthDay: true });
+              }}
+              style={
+                touchedInputs.birthDay && !validateBirthDay()
+                  ? { border: "2px solid #f15e6c" }
+                  : {}
+              }
             />
           </div>
+          {touchedInputs.birthDay && !validateBirthDay() ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>
+                Please enter the day of your birth date by entering a number
+                between 1 and 31.
+              </p>
+            </div>
+          ) : (
+            <></>
+          )}
+          {touchedInputs.birthMonth && !validateBirthMonth() ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>Select your birth month</p>
+            </div>
+          ) : (
+            <></>
+          )}
+          {touchedInputs.birthYear && !validateBirthYear() ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>Please enter a birth year from 1990 onwards.</p>
+            </div>
+          ) : (
+            <></>
+          )}
           <label htmlFor="sign-in-gender">Gender</label>
           <p className="steps-field-description">
             We use your gender to help personalise our content recommendations
             and ads for you.
           </p>
           <div id="gender-input-container">
-            <input type="radio" name="sign-in-gender" id="sign-in-gender-man" />
+            <input
+              type="radio"
+              name="sign-in-gender"
+              id="sign-in-gender-man"
+              onChange={(e) => {
+                setuserGender(e.target.id);
+              }}
+            />
             <label htmlFor="sign-in-gender-man">Man</label>
             <input
               type="radio"
               name="sign-in-gender"
               id="sign-in-gender-woman"
+              onChange={(e) => {
+                setuserGender(e.target.id);
+              }}
             />
             <label htmlFor="sign-in-gender-woman">Woman</label>
             <input
               type="radio"
               name="sign-in-gender"
               id="sign-in-gender-non-binary"
+              onChange={(e) => {
+                setuserGender(e.target.id);
+              }}
             />
             <label htmlFor="sign-in-gender-non-binary">Non-binary</label>
             <input
               type="radio"
               name="sign-in-gender"
               id="sign-in-gender-something-else"
+              onChange={(e) => {
+                setuserGender(e.target.id);
+              }}
             />
             <label htmlFor="sign-in-gender-something-else">
               Something else
@@ -121,15 +351,42 @@ function Sign() {
               type="radio"
               name="sign-in-gender"
               id="sign-in-gender-prefer-not-to-say"
+              onChange={(e) => {
+                setuserGender(e.target.id);
+              }}
             />
             <label htmlFor="sign-in-gender-prefer-not-to-say">
               Prefer not to say
             </label>
           </div>
-          <a href="#step3" className="sign-up-next-btn">
+          {touchedInputs.gender && userGender === "" ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>Select your gender.</p>
+            </div>
+          ) : (
+            <></>
+          )}
+          <a
+            href={allOk() ? "#step3" : "#"}
+            className="sign-up-next-btn"
+            onClick={() => {
+              setTouchedInputs({
+                email: true,
+                password: true,
+                name: true,
+                birthDay: true,
+                birthMonth: true,
+                birthYear: true,
+                gender: true,
+              });
+            }}
+          >
             Next
           </a>
         </section>
+
+        {/* Step 3 */}
         <section id="step3">
           <div id="step3loadingbar"></div>
           <div className="totalloadingbar"></div>
