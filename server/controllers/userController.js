@@ -7,7 +7,7 @@ const axios = require("axios");
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, dateOfBirth, gender } = req.body;
     const userDetails = await UserModel.findOne({ email });
 
     if (userDetails) {
@@ -19,6 +19,8 @@ const createUser = async (req, res) => {
       name,
       email,
       hashedPassword,
+      dateOfBirth,
+      gender,
     });
     await newUser.save();
 

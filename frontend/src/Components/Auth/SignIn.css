@@ -325,3 +325,38 @@
     box-shadow: inset 0 0 0 3px #1dd661;
     border: 2px solid #1dd661;
 }
+
+
+/* =========== Step 3 Styling =========== */
+
+
+.term-and-conditions-checkbox {
+    display: flex;
+    padding: 16px;
+    background-color: #232323;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 16px;
+    position: relative;
+    font-size: 0.9em;
+}
+
+.term-and-conditions-checkbox label {
+    width: 82%;
+}
+
+.term-and-conditions-checkbox input[type="checkbox"] {
+    margin-right: 10px;
+    height: 16px;
+    width: 16px;
+}
+
+.term-and-conditions-notes {
+    font-size: 0.9em;
+    margin: 0%;
+    margin-top: 7px;
+}
+
+.term-and-conditions-notes a {
+    color: #1dd661;
+}

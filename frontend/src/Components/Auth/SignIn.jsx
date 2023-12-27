@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./SignIn.css";
+import axios from "axios";
 import { ChevronLeft, AlertCircle } from "lucide-react";
 import Logo from "../Images/Spotify_Logo_CMYK_White.png";
 
@@ -13,6 +14,7 @@ function Sign() {
   const [userBirthMonth, setuserBirthMonth] = useState("");
   const [userBirthDay, setuserBirthDay] = useState(null);
   const [userGender, setuserGender] = useState("");
+  const [response, setresponse] = useState("");
   const [touchedInputs, setTouchedInputs] = useState({
     email: false,
     password: false,
@@ -66,6 +68,30 @@ function Sign() {
       validateBirthDay &&
       userGender !== ""
     );
+  };
+
+  const submitForm = async () => {
+    var date = new Date(userBirthYear, userBirthMonth - 1, userBirthDay);
+
+    const userObj = {
+      name: username,
+      email: userEmail,
+      password: userPassword,
+      dateOfBirth: date,
+      gender: userGender,
+    };
+    try {
+      setresponse(
+        await axios.post(
+          "http://localhost:8001/backend/user/createuser",
+          userObj
+        )
+      );
+      console.log(response);
+      window.alert(response.data.token);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -392,6 +418,44 @@ function Sign() {
           <div className="totalloadingbar"></div>
           <a href="#step2" className="sign-up-prev-btn">
             <ChevronLeft size={32} />
+          </a>
+          <h3 className="sign-in-step-count">Step 3 of 3</h3>
+          <h3 className="step-description">Terms & Conditions</h3>
+          <div className="term-and-conditions-checkbox">
+            <input
+              type="checkbox"
+              name="term-and-conditions-checkbox"
+              id="receive-marketing-messages"
+            />
+            <span></span>
+            <label htmlFor="receive-marketing-messages">
+              I would prefer not to receive marketing messages from Spotify
+            </label>
+          </div>
+          <div className="term-and-conditions-checkbox">
+            <input
+              type="checkbox"
+              name="term-and-conditions-checkbox"
+              id="share-my-registration-data"
+            />
+            <span></span>
+            <label htmlFor="share-my-registration-data">
+              {" "}
+              Share my registration data with Spotify's content providers for
+              marketing purposes.
+            </label>
+          </div>
+          <p className="term-and-conditions-notes">
+            By clicking on sign-up, you agree to Spotify's{" "}
+            <a href="#">Terms and Conditions of Use</a>.
+          </p>
+          <p className="term-and-conditions-notes">
+            To learn more about how Spotify collects, uses, shares and protects
+            your personal data, please see{" "}
+            <a href="#">Spotify's Privacy Policy</a>.
+          </p>
+          <a href="#" className="sign-up-next-btn" onClick={submitForm}>
+            Sign Up
           </a>
         </section>
       </form>

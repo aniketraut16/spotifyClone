@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   isPremium: { type: Boolean, default: false },
   isCreater: { type: Boolean, default: false },
   dateOfBirth: { type: Date },
+  gender: { type: String },
   profilePicture: { type: String },
   bio: { type: String },
   favoriteGenres: [{ type: String }],
