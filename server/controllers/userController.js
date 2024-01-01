@@ -43,7 +43,6 @@ const createUser = async (req, res) => {
           },
         }
       );
-      console.log(playlistId);
       newUser.playlists.push(playlistId.data.id);
       await newUser.save();
 
@@ -86,4 +85,26 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login, createUser };
+const availableEmail = async (req, res) => {
+  try {
+    const { email } = req.query; // Use req.query to get parameters from the URL
+    const userDetails = await UserModel.findOne({ email: email });
+
+    if (userDetails) {
+      return res.status(200).json({
+        message: "User Already Exists",
+      });
+    } else {
+      return res.status(200).json({
+        message: "User Not Exists",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+module.exports = { login, createUser, availableEmail };

@@ -10,9 +10,11 @@ function Sign() {
   const [isNewUser, setisNewUser] = useState(true);
   const [userPassword, setuserPassword] = useState("");
   const [username, setusername] = useState("");
-  const [userBirthYear, setuserBirthYear] = useState(null);
+  const [userBirthYear, setuserBirthYear] = useState("");
   const [userBirthMonth, setuserBirthMonth] = useState("");
-  const [userBirthDay, setuserBirthDay] = useState(null);
+  const [userBirthDay, setuserBirthDay] = useState("");
+  const [userBirthDayValidationMessage, setuserBirthDayValidationMessage] =
+    useState("");
   const [userGender, setuserGender] = useState("");
   const [response, setresponse] = useState("");
   const [touchedInputs, setTouchedInputs] = useState({
@@ -26,30 +28,72 @@ function Sign() {
   });
 
   useEffect(() => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (touchedInputs.email) {
-      if (emailRegex.test(userEmail)) {
-        setisValidEmail(true);
-        // Axios Request for availability of email
-        const sampleresult = userEmail === "example@email.com" ? false : true;
-        if (sampleresult) {
-          setisNewUser(true);
+    const checkUser = async () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (touchedInputs.email) {
+        if (emailRegex.test(userEmail)) {
+          setisValidEmail(true);
+          try {
+            // Make the API request directly within the useEffect
+            const sampleresult = await axios.get(
+              "http://localhost:8001/backend/user/isavailable",
+              { params: { email: userEmail } }
+            );
+
+            if (sampleresult.data.message === "User Not Exists") {
+              setisNewUser(true);
+            } else {
+              setisNewUser(false);
+            }
+          } catch (error) {
+            console.error("Error fetching user:", error);
+          }
         } else {
-          setisNewUser(false);
+          setisValidEmail(false);
+          setisNewUser(true);
         }
-      } else {
-        setisValidEmail(false);
-        setisNewUser(true);
       }
-    }
+    };
+
+    checkUser();
   }, [userEmail, touchedInputs.email]);
 
   const validatePassword = () => {
     return userPassword.length >= 8 && userPassword.trim() != "";
   };
-
+  function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  }
   const validateBirthDay = () => {
-    return userBirthDay >= 1 && userBirthDay <= 31;
+    setuserBirthDayValidationMessage("");
+    if (userBirthDay === "") {
+      setuserBirthDayValidationMessage(
+        "Please enter the day of your birth date by entering a number between 1 and 31"
+      );
+      return false;
+    }
+
+    const month = parseInt(userBirthMonth, 10); // Convert to integer
+    const year = parseInt(userBirthYear, 10); // Convert to integer
+    const day = parseInt(userBirthDay, 10); // Convert to integer
+
+    if (day >= 1 && day <= 31) {
+      if (
+        (month === 2 && isLeapYear(year) && day > 29) ||
+        (month === 2 && !isLeapYear(year) && day > 28) ||
+        (month % 2 === 0 && day > 30)
+      ) {
+        setuserBirthDayValidationMessage("Please enter your date of birth");
+        return false;
+      }
+      return true;
+    } else {
+      setuserBirthDayValidationMessage(
+        "Please enter the day of your birth date by entering a number between 1 and 31"
+      );
+      return false;
+    }
   };
 
   const validateBirthMonth = () => {
@@ -63,9 +107,9 @@ function Sign() {
   const allOk = () => {
     return (
       username.trim() !== "" &&
-      validateBirthYear &&
-      validateBirthMonth &&
-      validateBirthDay &&
+      validateBirthYear() &&
+      validateBirthMonth() &&
+      validateBirthDay() &&
       userGender !== ""
     );
   };
@@ -87,8 +131,7 @@ function Sign() {
           userObj
         )
       );
-      console.log(response);
-      window.alert(response.data.token);
+      console.log(response.data.token);
     } catch (error) {
       console.log(error);
     }
@@ -218,7 +261,7 @@ function Sign() {
             value={username}
             onChange={(e) => {
               setusername(e.target.value);
-              setTouchedInputs({ ...touchedInputs, email: true });
+              setTouchedInputs({ ...touchedInputs, name: true });
             }}
             style={
               touchedInputs.name && username.trim() === ""
@@ -226,6 +269,7 @@ function Sign() {
                 : {}
             }
           />
+
           {touchedInputs.name && username.trim() === "" ? (
             <div className="user-warning">
               <AlertCircle size={24} strokeWidth={2.25} />
@@ -272,15 +316,15 @@ function Sign() {
               <option value="" disabled selected>
                 Month
               </option>
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
               <option value="10">October</option>
               <option value="11">November</option>
               <option value="12">December</option>
@@ -305,10 +349,7 @@ function Sign() {
           {touchedInputs.birthDay && !validateBirthDay() ? (
             <div className="user-warning">
               <AlertCircle size={24} strokeWidth={2.25} />
-              <p>
-                Please enter the day of your birth date by entering a number
-                between 1 and 31.
-              </p>
+              <p>{userBirthDayValidationMessage}</p>
             </div>
           ) : (
             <></>
@@ -340,7 +381,7 @@ function Sign() {
               name="sign-in-gender"
               id="sign-in-gender-man"
               onChange={(e) => {
-                setuserGender(e.target.id);
+                setuserGender(e.target.id.replace("sign-in-gender-", ""));
               }}
             />
             <label htmlFor="sign-in-gender-man">Man</label>
@@ -349,7 +390,7 @@ function Sign() {
               name="sign-in-gender"
               id="sign-in-gender-woman"
               onChange={(e) => {
-                setuserGender(e.target.id);
+                setuserGender(e.target.id.replace("sign-in-gender-", ""));
               }}
             />
             <label htmlFor="sign-in-gender-woman">Woman</label>
@@ -358,7 +399,7 @@ function Sign() {
               name="sign-in-gender"
               id="sign-in-gender-non-binary"
               onChange={(e) => {
-                setuserGender(e.target.id);
+                setuserGender(e.target.id.replace("sign-in-gender-", ""));
               }}
             />
             <label htmlFor="sign-in-gender-non-binary">Non-binary</label>
@@ -367,7 +408,7 @@ function Sign() {
               name="sign-in-gender"
               id="sign-in-gender-something-else"
               onChange={(e) => {
-                setuserGender(e.target.id);
+                setuserGender(e.target.id.replace("sign-in-gender-", ""));
               }}
             />
             <label htmlFor="sign-in-gender-something-else">
@@ -378,7 +419,7 @@ function Sign() {
               name="sign-in-gender"
               id="sign-in-gender-prefer-not-to-say"
               onChange={(e) => {
-                setuserGender(e.target.id);
+                setuserGender(e.target.id.replace("sign-in-gender-", ""));
               }}
             />
             <label htmlFor="sign-in-gender-prefer-not-to-say">
