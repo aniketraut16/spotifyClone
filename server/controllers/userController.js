@@ -25,7 +25,6 @@ const createUser = async (req, res) => {
     await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, SECRET_KEY);
-    console.log(token);
     const likedSongs = {
       title: `${name}'s Liked Songs`,
       songs: [],
