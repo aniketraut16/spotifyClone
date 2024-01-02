@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./SignIn.css";
 import axios from "axios";
-import { ChevronLeft, AlertCircle } from "lucide-react";
+import { ChevronLeft, AlertCircle , Eye ,EyeOff } from "lucide-react";
 import Logo from "../Images/Spotify_Logo_CMYK_White.png";
 
 function Sign() {
@@ -13,10 +13,9 @@ function Sign() {
   const [userBirthYear, setuserBirthYear] = useState("");
   const [userBirthMonth, setuserBirthMonth] = useState("");
   const [userBirthDay, setuserBirthDay] = useState("");
-  const [userBirthDayValidationMessage, setuserBirthDayValidationMessage] =
-    useState("");
   const [userGender, setuserGender] = useState("");
   const [response, setresponse] = useState("");
+  const [isPasswordVisible, setisPasswordVisible] = useState(false);
   const [touchedInputs, setTouchedInputs] = useState({
     email: false,
     password: false,
@@ -60,42 +59,29 @@ function Sign() {
   }, [userEmail, touchedInputs.email]);
 
   const validatePassword = () => {
-    return userPassword.length >= 8 && userPassword.trim() != "";
+    return userPassword.length >= 8 && userPassword.trim() !== "";
   };
   function isLeapYear(year) {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   }
   const validateBirthDay = () => {
-    setuserBirthDayValidationMessage("");
-    if (userBirthDay === "") {
-      setuserBirthDayValidationMessage(
-        "Please enter the day of your birth date by entering a number between 1 and 31"
-      );
-      return false;
-    }
-
-    const month = parseInt(userBirthMonth, 10); // Convert to integer
-    const year = parseInt(userBirthYear, 10); // Convert to integer
-    const day = parseInt(userBirthDay, 10); // Convert to integer
-
-    if (day >= 1 && day <= 31) {
-      if (
-        (month === 2 && isLeapYear(year) && day > 29) ||
-        (month === 2 && !isLeapYear(year) && day > 28) ||
-        (month % 2 === 0 && day > 30)
-      ) {
-        setuserBirthDayValidationMessage("Please enter your date of birth");
-        return false;
+    return (userBirthDay <= 31 && userBirthDay >= 1 );
+  };
+  const validate2BirthDay = () => {
+    if(userBirthMonth%2 === 0){
+      if (userBirthMonth === 2) {
+        if(isLeapYear(userBirthYear)){
+          return userBirthDay <= 29;
+        }else{
+          return userBirthDay <= 28;
+        }
+      }else{
+        return userBirthDay <= 30;
       }
-      return true;
-    } else {
-      setuserBirthDayValidationMessage(
-        "Please enter the day of your birth date by entering a number between 1 and 31"
-      );
-      return false;
+    }else{
+      return false
     }
   };
-
   const validateBirthMonth = () => {
     return userBirthMonth !== "";
   };
@@ -131,6 +117,8 @@ function Sign() {
           userObj
         )
       );
+      localStorage.setItem("userToken", response.data.token);
+      localStorage.setItem("userdata", response.data.user);
       console.log(response.data.token);
     } catch (error) {
       console.log(error);
@@ -206,7 +194,7 @@ function Sign() {
           <label htmlFor="sign-in-password">Password</label>
           <div id="password-input-container">
             <input
-              type="password"
+              type={ isPasswordVisible?"text":"password"}
               name="sign-in-password"
               id="sign-in-password"
               value={userPassword}
@@ -220,6 +208,11 @@ function Sign() {
                   : {}
               }
             />
+
+            <div id="password-visibility" onClick={()=>{setisPasswordVisible(!isPasswordVisible)}}>
+              {isPasswordVisible?<Eye/>:<EyeOff/>}
+            </div>
+
             {touchedInputs.password && !validatePassword() ? (
               <div className="user-warning">
                 <AlertCircle size={24} strokeWidth={2.25} />
@@ -349,8 +342,16 @@ function Sign() {
           {touchedInputs.birthDay && !validateBirthDay() ? (
             <div className="user-warning">
               <AlertCircle size={24} strokeWidth={2.25} />
-              <p>{userBirthDayValidationMessage}</p>
+              <p>{"Please enter the day of your birth date by entering a number between 1 and 31"}</p>
             </div>
+          ) : (
+            <></>
+          )}
+          {touchedInputs.birthDay && !validate2BirthDay() &&  validateBirthDay() ? (
+            <div className="user-warning">
+              <AlertCircle size={24} strokeWidth={2.25} />
+              <p>{"Please enter your date of birth"}</p> 
+              </div>
           ) : (
             <></>
           )}
