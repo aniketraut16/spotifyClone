@@ -1,0 +1,118 @@
+#playlist{
+    width: 74.5vw;
+    height: 98vh;
+    overflow-y: auto;
+    color: white;
+    border-radius: 5px;
+    background-color: #121212
+}
+
+#playlist-intro{
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to bottom, #506e94 , #2a3a4e );
+}
+
+
+#playlist-intro-menu{
+    padding: 10px;
+    position: sticky;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#playlist-intro-menu > *{
+    margin-left: 10px;
+    padding: 7px;
+    background-color: #1212129a;
+    border-radius: 25px;
+}
+
+.arrow-btns{
+    margin-right: auto;
+    
+}
+
+#playlist-intro-menu a{
+    height: 18px;
+    padding:10px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    font-size: 0.8em;
+    align-items: center;
+}
+#playlist-intro-menu a svg{
+    margin-right:10px;
+}
+
+#playlist-info{
+    display: flex;
+    align-items: center;
+    height: 80%
+}
+#playlist-info img{
+    height: 95%;
+    margin: 0px 30px 0px 10px;
+    filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.8));
+}
+#playlist-info h1{
+    font-size: 3.5em;
+    margin: 0%;
+    margin-bottom: 1em;
+}
+#playlist-info div {
+    align-self: flex-end;
+}
+#playlist-songs-list{
+    padding: 20px;
+    padding-bottom: 0px;
+}
+#playlist-songs-list>div{
+    color: #a7a493;
+    padding: 5px 0px ;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 12fr 8fr 8fr 1fr 2fr;
+}
+#playlist-songs-list-heading{
+    border-bottom: 1px solid #303439;
+    position: sticky;
+    top: 0%;
+}
+.playlist-songs-list-title{
+    display: flex;
+    align-items: center;
+}
+.playlist-songs-list-title img{
+    height: 3em;
+    margin-right: 10px;
+}
+.playlist-songs-list-title p{
+    margin: 2px 0px;
+}
+.playlist-songs-list-index{
+    justify-self:center;
+}
+#playlist-play-options{
+    height: 5em;
+    display: grid;
+    align-items: center;
+}
+#playlist-play-options-playbtn{
+    height: 4em;
+    width: 4em;
+    margin-left: 20px;
+    border-radius: 2em;
+    background-color: #1ed760;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#playlist-play-options-playbtn svg{
+    color: black;
+    fill: black;
+
+}

@@ -1,5 +1,6 @@
 const PlaylistModel = require("../models/PlaylistModel");
 const SongModel = require("../models/SongModel");
+const UserModel = require("../models/UserModel")
 require("../database");
 
 const createPlaylist = async (req, res) => {
@@ -24,6 +25,8 @@ const createPlaylist = async (req, res) => {
     });
 
     await newPlaylist.save();
+
+    await UserModel.updateOne({ _id: createdBy },{$push:{playlists:newPlaylist._id}});
 
     res.status(200).json({
       message: "Playlist Successfully Created",
@@ -103,10 +106,10 @@ const deletesong = async (req, res) => {
 };
 const playlistDetails = async (req, res) => {
   try {
-    const title = req.params.title;
+    const id = req.params.id;
 
     const playlistdetails = await PlaylistModel.findOne({
-      title: title,
+      _id: id,
       createdBy: req.createdBy,
     });
 
@@ -125,6 +128,7 @@ const playlistDetails = async (req, res) => {
 
     const dataobj = {
       title: playlistdetails.title,
+      description:playlistdetails.description,
       songs: songlist,
     };
     res.status(200).json(dataobj);
@@ -162,10 +166,33 @@ const changeTitle = async (req, res) => {
   }
 };
 
+const playlistlist = async (req, res) => {
+  try {
+    const userid = req.createdBy;
+    const userdata = await UserModel.findOne({ _id: userid });
+    const playlist_list = [];
+    for (const playlistid of userdata.playlists) {
+      const playlistdetails = await PlaylistModel.findOne({ _id: playlistid });
+      const data = {
+        id: playlistdetails._id,
+        title: playlistdetails.title,
+        noOfSongs: playlistdetails.songs.length,
+      };
+      playlist_list.push(data);
+    }
+    res.status(200).json(playlist_list);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 module.exports = {
   createPlaylist,
   addsong,
   deletesong,
   playlistDetails,
   changeTitle,
+  playlistlist
 };
