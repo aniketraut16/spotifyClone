@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronRight,
   ChevronLeft,
@@ -8,304 +8,69 @@ import {
   Clock,
   Play,
 } from "lucide-react";
+import axios from "axios";
 import Playlisticon from "../Images/playlistLogo.png";
 import "./Playlist.css";
-function Playlist(props) {
-  const { id } = props;
-  function formatDate(input) {
-    if (!(input instanceof Date)) {
-      input = new Date(input);
-    }
+import { useParams } from "react-router-dom";
 
-    const day = String(input.getDate()).padStart(2, "0");
+function Playlist() {
+  const { playlistId } = useParams();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      try {
+        const api = `http://localhost:8001/backend/playlists/playlistdetails/${playlistId}`;
+        const response = await axios.get(api, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        });
+        setData(response.data);
+      } catch (error) {
+        setError(error.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaylist();
+  }, [playlistId]);
+
+  function formatDate(input) {
+    const date = input instanceof Date ? input : new Date(input);
+    const day = String(date.getDate()).padStart(2, "0");
     const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
       month: "short",
-    }).format(input);
-    const year = input.getFullYear();
+    }).format(date);
+    const year = date.getFullYear();
 
     return `${day} ${monthAbbreviation} ${year}`;
   }
-  const data = {
-    title: "Aniket Raut's Liked Songs",
-    description: "Its Anikets Favorite Songs",
-    songs: [
-      {
-        _id: "659584e60919c80fea385921",
-        title: "Shape of You",
-        singer: "Ed Sheeran",
-        album: "÷ (Divide)",
-        duration: 233,
-        genre: "Pop",
-        releaseDate: "2017-01-06T00:00:00.000Z",
-        lyrics: "The club isn't the best place to find a lover...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385924",
-        title: "Despacito",
-        singer: "Luis Fonsi, Daddy Yankee",
-        album: "Vida",
-        duration: 228,
-        genre: "Reggaeton",
-        releaseDate: "2017-01-12T00:00:00.000Z",
-        lyrics: "Despacito, quiero respirar tu cuello despacito...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385931",
-        title: "Counting Stars",
-        singer: "OneRepublic",
-        album: "Native",
-        duration: 257,
-        genre: "Pop",
-        releaseDate: "2013-06-14T00:00:00.000Z",
-        lyrics: "Lately, I've been, I've been losing sleep...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385935",
-        title: "Tum Hi Ho",
-        singer: "Arijit Singh",
-        album: "Aashiqui 2",
-        duration: 266,
-        genre: "Bollywood",
-        releaseDate: "2013-04-04T00:00:00.000Z",
-        lyrics: "Tum hi ho, ab tum hi ho...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385939",
-        title: "Raabta",
-        singer: "Arijit Singh, Nikhita Gandhi",
-        album: "Raabta",
-        duration: 303,
-        genre: "Bollywood",
-        releaseDate: "2017-04-27T00:00:00.000Z",
-        lyrics: "Kehte hain khuda ne iss jahan mein...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea38593e",
-        title: "Sun Saathiya",
-        singer: "Priya Saraiya, Divya Kumar",
-        album: "ABCD 2",
-        duration: 220,
-        genre: "Bollywood",
-        releaseDate: "2015-05-08T00:00:00.000Z",
-        lyrics: "Sun saathiya mahiya, barsa de ishqa ki syahiyaan...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385940",
-        title: "Ae Dil Hai Mushkil",
-        singer: "Arijit Singh",
-        album: "Ae Dil Hai Mushkil",
-        duration: 358,
-        genre: "Bollywood",
-        releaseDate: "2016-09-06T00:00:00.000Z",
-        lyrics: "Tu safar mera, hai tu hi meri manzil...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385945",
-        title: "Kabira",
-        singer: "Tochi Raina, Rekha Bhardwaj",
-        album: "Yeh Jawaani Hai Deewani",
-        duration: 231,
-        genre: "Bollywood",
-        releaseDate: "2013-04-09T00:00:00.000Z",
-        lyrics: "Kabira maan ja, kabira maan ja...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385921",
-        title: "Shape of You",
-        singer: "Ed Sheeran",
-        album: "÷ (Divide)",
-        duration: 233,
-        genre: "Pop",
-        releaseDate: "2017-01-06T00:00:00.000Z",
-        lyrics: "The club isn't the best place to find a lover...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385924",
-        title: "Despacito",
-        singer: "Luis Fonsi, Daddy Yankee",
-        album: "Vida",
-        duration: 228,
-        genre: "Reggaeton",
-        releaseDate: "2017-01-12T00:00:00.000Z",
-        lyrics: "Despacito, quiero respirar tu cuello despacito...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385931",
-        title: "Counting Stars",
-        singer: "OneRepublic",
-        album: "Native",
-        duration: 257,
-        genre: "Pop",
-        releaseDate: "2013-06-14T00:00:00.000Z",
-        lyrics: "Lately, I've been, I've been losing sleep...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385935",
-        title: "Tum Hi Ho",
-        singer: "Arijit Singh",
-        album: "Aashiqui 2",
-        duration: 266,
-        genre: "Bollywood",
-        releaseDate: "2013-04-04T00:00:00.000Z",
-        lyrics: "Tum hi ho, ab tum hi ho...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385939",
-        title: "Raabta",
-        singer: "Arijit Singh, Nikhita Gandhi",
-        album: "Raabta",
-        duration: 303,
-        genre: "Bollywood",
-        releaseDate: "2017-04-27T00:00:00.000Z",
-        lyrics: "Kehte hain khuda ne iss jahan mein...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea38593e",
-        title: "Sun Saathiya",
-        singer: "Priya Saraiya, Divya Kumar",
-        album: "ABCD 2",
-        duration: 220,
-        genre: "Bollywood",
-        releaseDate: "2015-05-08T00:00:00.000Z",
-        lyrics: "Sun saathiya mahiya, barsa de ishqa ki syahiyaan...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385940",
-        title: "Ae Dil Hai Mushkil",
-        singer: "Arijit Singh",
-        album: "Ae Dil Hai Mushkil",
-        duration: 358,
-        genre: "Bollywood",
-        releaseDate: "2016-09-06T00:00:00.000Z",
-        lyrics: "Tu safar mera, hai tu hi meri manzil...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385945",
-        title: "Kabira",
-        singer: "Tochi Raina, Rekha Bhardwaj",
-        album: "Yeh Jawaani Hai Deewani",
-        duration: 231,
-        genre: "Bollywood",
-        releaseDate: "2013-04-09T00:00:00.000Z",
-        lyrics: "Kabira maan ja, kabira maan ja...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385921",
-        title: "Shape of You",
-        singer: "Ed Sheeran",
-        album: "÷ (Divide)",
-        duration: 233,
-        genre: "Pop",
-        releaseDate: "2017-01-06T00:00:00.000Z",
-        lyrics: "The club isn't the best place to find a lover...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385924",
-        title: "Despacito",
-        singer: "Luis Fonsi, Daddy Yankee",
-        album: "Vida",
-        duration: 228,
-        genre: "Reggaeton",
-        releaseDate: "2017-01-12T00:00:00.000Z",
-        lyrics: "Despacito, quiero respirar tu cuello despacito...",
-        isExplicit: false,
-      },
-      {
-        _id: "659584e60919c80fea385931",
-        title: "Counting Stars",
-        singer: "OneRepublic",
-        album: "Native",
-        duration: 257,
-        genre: "Pop",
-        releaseDate: "2013-06-14T00:00:00.000Z",
-        lyrics: "Lately, I've been, I've been losing sleep...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385935",
-        title: "Tum Hi Ho",
-        singer: "Arijit Singh",
-        album: "Aashiqui 2",
-        duration: 266,
-        genre: "Bollywood",
-        releaseDate: "2013-04-04T00:00:00.000Z",
-        lyrics: "Tum hi ho, ab tum hi ho...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385939",
-        title: "Raabta",
-        singer: "Arijit Singh, Nikhita Gandhi",
-        album: "Raabta",
-        duration: 303,
-        genre: "Bollywood",
-        releaseDate: "2017-04-27T00:00:00.000Z",
-        lyrics: "Kehte hain khuda ne iss jahan mein...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea38593e",
-        title: "Sun Saathiya",
-        singer: "Priya Saraiya, Divya Kumar",
-        album: "ABCD 2",
-        duration: 220,
-        genre: "Bollywood",
-        releaseDate: "2015-05-08T00:00:00.000Z",
-        lyrics: "Sun saathiya mahiya, barsa de ishqa ki syahiyaan...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385940",
-        title: "Ae Dil Hai Mushkil",
-        singer: "Arijit Singh",
-        album: "Ae Dil Hai Mushkil",
-        duration: 358,
-        genre: "Bollywood",
-        releaseDate: "2016-09-06T00:00:00.000Z",
-        lyrics: "Tu safar mera, hai tu hi meri manzil...",
-        isExplicit: false,
-      },
-      {
-        _id: "659585990919c80fea385945",
-        title: "Kabira",
-        singer: "Tochi Raina, Rekha Bhardwaj",
-        album: "Yeh Jawaani Hai Deewani",
-        duration: 231,
-        genre: "Bollywood",
-        releaseDate: "2013-04-09T00:00:00.000Z",
-        lyrics: "Kabira maan ja, kabira maan ja...",
-        isExplicit: false,
-      },
-    ],
-  };
-  var totalDuration = 0;
-  for (const song of data.songs) {
-    totalDuration += song.duration;
+
+  if (loading) {
+    return <p>Loading...</p>;
   }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  const totalDuration = data.songs.reduce(
+    (acc, song) => acc + song.duration,
+    0
+  );
+
   return (
     <div id="playlist">
       <div id="playlist-intro">
         <div id="playlist-intro-menu">
           <ChevronLeft />
           <ChevronRight className="arrow-btns" />
-          <a href="#">Explore Preminum</a>
+          <a href="#">Explore Premium</a>
           <a href="#">
             <ArrowDownCircle /> Install App
           </a>
@@ -323,7 +88,7 @@ function Playlist(props) {
               aniket{" \u2022 "}
               {`${data.songs.length} songs , about ${Math.floor(
                 totalDuration / 3600
-              )} hr ${totalDuration % 60} min`}
+              )} hr ${Math.floor((totalDuration % 3600) / 60)} min`}
             </p>
           </div>
         </div>

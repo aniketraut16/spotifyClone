@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Playlisticon from "../Images/playlistLogo.png";
 import "./Navbar.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { Search, Home, Library, Plus, MoveRight } from "lucide-react";
 
 function Navbar() {
@@ -38,7 +39,6 @@ function Navbar() {
           },
         }
       );
-      console.log(data);
       setresponse(data.data);
     } catch (error) {
       console.log(error);
@@ -65,33 +65,36 @@ function Navbar() {
         <div id="library-menu">
           {" "}
           <Library />
-          Your Library <Plus id="plus" onClick={createPlaylist}/> <MoveRight id="moveright" />
+          Your Library <Plus id="plus" onClick={createPlaylist} />{" "}
+          <MoveRight id="moveright" />
         </div>
 
         <div className="playlist-list">
           {response.map((playlist, index) => (
-            <div key={index}>
-              <img src={Playlisticon} alt="ef" />
-              <div className="playlist-details">
-                {playlist.title.includes("Liked Songs") ? (
-                  <>
-                    <h3>Liked Songs</h3>
-                    <p>
-                      Playlist{" \u2022 "}
-                      {playlist.noOfSongs}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h3>{playlist.title}</h3>
-                    <p>
-                      Playlist{" \u2022 "}
-                      {"aniket"}
-                    </p>
-                  </>
-                )}
+            <Link to={`/playlist/${playlist.id}`}>
+              <div key={index} className="onePlaylist">
+                <img src={Playlisticon} alt="ef" />
+                <div className="playlist-details">
+                  {playlist.title.includes("Liked Songs") ? (
+                    <>
+                      <h3>Liked Songs</h3>
+                      <p>
+                        Playlist{" \u2022 "}
+                        {playlist.noOfSongs}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h3>{playlist.title}</h3>
+                      <p>
+                        Playlist{" \u2022 "}
+                        {"aniket"}
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
