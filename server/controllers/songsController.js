@@ -1,4 +1,5 @@
 const SongModel = require("../models/SongModel");
+const ArtistModel = require("../models/ArtistModel");
 require("../database");
 
 // Function to Add Song in DataBase
@@ -6,7 +7,7 @@ const addSong = async (req, res) => {
   try {
     const {
       title,
-      singer,
+      artistIds,
       album,
       duration,
       genre,
@@ -21,10 +22,18 @@ const addSong = async (req, res) => {
         message: "Song already exists",
       });
     }
+    const artist = [];
+    for(const ids of artistIds){
+      artist[ids] = await ArtistModel.findOne({ids});
+      if(!artist[ids]){
+        return res.status(404).json({message:"Artist Not Found!"});
+      }
+    }
+
 
     const newSong = new SongModel({
       title,
-      singer,
+      artistIds,
       album,
       duration,
       genre,
@@ -34,6 +43,10 @@ const addSong = async (req, res) => {
     });
 
     await newSong.save();
+
+    for(const ids of artistIds){
+     await ArtistModel.updateOne({ids},{$push:{songs:newSong._id}})
+    }
 
     res.status(201).json({
       message: "Song successfully added",
