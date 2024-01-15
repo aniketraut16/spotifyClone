@@ -1,0 +1,71 @@
+#Search{
+    
+        width: 74.5vw;
+        height: 98vh;
+        overflow-y: auto;
+        color: white;
+        border-radius: 5px;
+        background-color: #121212
+    
+}
+#song-search-navbar .primary-control{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#song-search-navbar .primary-control > *{
+background-color: #050505;
+margin-right: 10px;
+padding: 7px;
+border-radius: 20px;
+}
+.rhs-primary-control{
+margin-left: auto;
+display: flex;
+align-items: center;
+justify-content: space-evenly;
+color: white;
+text-decoration: none;
+}
+.rhs-primary-control svg {
+margin: 0px 5px;
+}
+#input-div{
+    background-color: #242424 !important;
+    padding: 15px 12px !important;
+    border-radius: 50px !important;
+    display: flex;
+    border:2px solid transparent; /* Change the border color on hover or active */
+    align-items: center;
+    justify-content: space-evenly;
+}
+#input-div:hover,
+#input-div:active {
+  border-color: white; /* Change the border color on hover or active */
+}
+
+#input-div input {
+    margin: 0px 4px;
+    font-size: 1.1em;
+    background:transparent;
+    color: white;
+    outline: none;
+    border: none;
+}
+
+.secondary-filter{
+    display: flex;
+    padding: 10px;
+}
+.secondary-filter a{
+    margin: 0px 7px;
+    color: white;
+    padding: 7px 10px;
+    background-color: #242424;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+
+

@@ -10,19 +10,21 @@ import PlaylistSearch from "./Components/Search/PlaylistSearch";
 import SongSearch from "./Components/Search/SongSearch";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/signin" exact Component={SignIn} />
-        <Route path="/login" exact Component={LogIn} />
-        <Route path="/" exact Component={Home}>
-          <Route path="playlist/:playlistId" exact Component={Playlist} />
-          <Route path="search/:word" exact Component={Search}>
-            <Route path="" exact Component={AllSearch} />
-            <Route path="tracks" exact Component={SongSearch} />
-            <Route path="playlists" exact Component={PlaylistSearch} />
-            <Route path="artists" exact Component={ArtistSearch} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/" element={<Home />}>
+          <Route path="playlist/:playlistId" element={<Playlist />} />
+          <Route path="search" element={<Search />}>
+            {/* Use an empty string as the path for the default child route */}
+            <Route index element={<AllSearch />} />
+            <Route path=":word/tracks" element={<SongSearch />} />
+            <Route path=":word/playlists" element={<PlaylistSearch />} />
+            <Route path=":word/artists" element={<ArtistSearch />} />
           </Route>
         </Route>
       </Routes>
